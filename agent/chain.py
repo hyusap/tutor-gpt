@@ -20,6 +20,7 @@ from langchain.tools.python.tool import PythonREPLTool
 from agent.langchain_agents.react_openai_functions_agent import initialize_react_openai_agent
 
 from agent.tools.askquestion import AskQuestion
+from agent.tools.graph import GraphTool
 from agent.tools.wolframalphafull import WolframAlphaFull
 
 from dotenv import load_dotenv
@@ -57,7 +58,7 @@ class BloomChain:
         self.system_response = SystemMessagePromptTemplate(prompt=SYSTEM_RESPONSE)
 
         wolframalpha = WolframAlphaFull()
-        self.tools = load_tools(["google-serper", "wikipedia", "arxiv"], llm=self.llm) + [PythonREPLTool(), wolframalpha]
+        self.tools = load_tools(["google-serper", "wikipedia", "arxiv"], llm=self.llm) + [PythonREPLTool(), wolframalpha, GraphTool()]
         tool_documents = [Document(page_content=tool.description, metadata={"index": index}) for index, tool in enumerate(self.tools)]
         tool_vectorstore = FAISS.from_documents(tool_documents, OpenAIEmbeddings())
         self.tool_retriever = tool_vectorstore.as_retriever()
