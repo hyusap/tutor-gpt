@@ -54,11 +54,7 @@ DO NOT include anything in your response other than code."""
         if result != 0:
             return "Too complicated for me to understand."
         else:
-            return (
-                "Plot has been created, here's the code:\n```python\n"
-                + code
-                + "\n```"
-            )
+            return "Plot has been created, in your informational response specify that the user way write {plot.png} to insert the plot."
 
     async def _arun(
         self,
