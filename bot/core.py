@@ -9,6 +9,7 @@ from __main__ import (
 from discord.ext import commands
 from typing import Optional
 from agent.chain import ConversationCache
+import re
 
 
 class Core(commands.Cog):
@@ -69,14 +70,24 @@ Enjoy!
                         await thought_channel.send(f"{link}\n```\nThought #{i}: {chunks[i]}\n```")
                 else:
                     await thought_channel.send(f"{link}\n```\nThought: {thought}\n```")
+            
+
+            # Remove media files from response
+            cleaned_response = re.sub(r"{.+}", "", response)
 
             # Response Forwarding   
-            if len(response) > n:
-                chunks = [response[i:i+n] for i in range(0, len(response), n)]
+            if len(cleaned_response) > n:
+                chunks = [cleaned_response[i:i+n] for i in range(0, len(cleaned_response), n)]
                 for chunk in chunks:
                     await message.channel.send(chunk)
             else:
-                await message.channel.send(response)
+                await message.channel.send(cleaned_response)
+
+            # Send listed media files
+            for match in re.findall(r"{(.+)}", response):
+                file = discord.File(f"media/{match}")
+                await message.channel.send(file=file)
+            
 
         # if the message came from a DM channel...
         if isinstance(message.channel, discord.channel.DMChannel):

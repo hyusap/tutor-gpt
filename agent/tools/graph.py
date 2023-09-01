@@ -31,7 +31,7 @@ class GraphTool(BaseTool):
                 SystemMessagePromptTemplate.from_template(
                     """You are an function graphing bot. You can create plots of functions with the python library matplotlib.
 The user will provide you instructions on what to function to plot and you will make a plot using the matplotlib python libary.
-The code should save an image of the plot to the file "plot.png".
+The code should save an image of the plot to the file "media/plot.png".
 DO NOT include anything in your response other than code."""
                 ),
                 HumanMessagePromptTemplate.from_template("{query}"),
@@ -54,7 +54,7 @@ DO NOT include anything in your response other than code."""
         if result != 0:
             return "Too complicated for me to understand."
         else:
-            return "Plot has been created, in your informational response specify that the user way write {plot.png} to insert the plot."
+            return "Plot has been created, in your final answer YOU MUST instruct the user to write {plot.png} to insert the plot."
 
     async def _arun(
         self,
